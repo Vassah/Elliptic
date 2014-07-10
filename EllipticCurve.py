@@ -65,7 +65,8 @@ class EllipticCurve():
     def points(self):
         rhss = [[i, self.RHS(i)] for i in self.field.elements]
         roots = [[j[0], self.field.square_root(j[1])] for j in rhss]
-        points = [self.pointmaker([j[0], j[1][1], j[1][2]]) for j in roots if j[1]!=None]
+        points = [point for point in self.pointmaker([j[0], j[1][1], j[1][2]]) for j in roots if j[1]!=None]
+        #The pervious line is two list comprehensions, makes points for each squareroot, the second flattens the returned tuple
         points.append([0,0,0])
         return points
 
