@@ -1,28 +1,5 @@
 #Some Number Theory Stuff
 
-def Legendre(top, bottom):
-    top = top%bottom
-    if top==1 or top ==0:
-        return 1
-    if top%2==0 and top!=2:
-        return Legendre(2, bottom)*Legendre(top/2, bottom)
-    if top == bottom-1:
-        if bottom%4 == 1:
-            return 1
-        if bottom%4 == 3:
-            return -1
-    if top == 2:
-        if bottom%8 == 1 or bottom%8 == 7:
-            return 1
-        if bottom%8 == 3 or bottom%8 == 5:
-            return -1
-    else:
-        if top%4 == 1 or bottom%4 == 1:
-            return Legendre(bottom, top)
-        if top%4 == 3 and bottom%4 == 3:
-            return -Legendre(bottom, top)
-#this should hopefully calculate the legendre symbol for our two numbers
-#there appears to be a case missing however. Sometimes we get a null outpout
 def is_Square(number, field_size, is_prime = False):
     if is_prime:
         return ModularExponent(number, (field_size - 1) // 2, field_size) == 1
