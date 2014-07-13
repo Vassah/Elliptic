@@ -1,28 +1,6 @@
 import sys
 sys.path.append('~/')
-from Numbers import *
-
-class GeneralField():
-    def __init__(self, prime, power):
-        self.elements = range(0, prime**power)
-        self.characteristic = prime
-        self.cardinality = len(self.elements)
-
-    def __str__(self):
-        return 'General Field on '+str(self.cardinality)+' elements.'
-
-    def add(self, a, b):
-        return (a+b)%self.cardinality
-
-    def mult(self, a, b):
-        return (a*b)%self.cardinality
-
-    def is_square(self, a):
-        return is_Square(a, self.cardinality)
-
-    def square_root(self, a):
-        return square_root(a, self.cardinality)
-        
+from GeneralField import *
 
 class EllipticCurve():
     def __init__(self, field, coefficients): #we will require a tuple of coefficients
