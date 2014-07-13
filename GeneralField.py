@@ -1,4 +1,4 @@
-def Legendre(top, bottom):
+def Legendre(top, bottom):  #This is defined field independently since the Legendre symbol is a morphism really.
     top = top%bottom
     if top==1 or top ==0:
         return 1
@@ -40,7 +40,7 @@ class GeneralField():
     def is_square(self, number, is_prime = False):
         if is_prime:
             return self.exponent(number, (self.cardinality - 1) // 2, self.cardinality) == 1
-        if Legendre(number, field_size)==1: #This needs replacing since we don't have a Legendre method here
+        if Legendre(number, field_size)==1:
             return True
         return False
 
