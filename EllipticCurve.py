@@ -11,6 +11,8 @@ class EllipticCurve():
             for i,val in enumerate(coefficients):
                 self.coefficients[i] = val
             self.field = field
+            except:
+                return "Sorry I don't support that yet"
         if field.cardinality%3==0:
             if len(coefficients)!=3:
                 raise
@@ -18,6 +20,8 @@ class EllipticCurve():
                 self.coefficients[i] = val
             self.weierstrass = 'y**2 = 4x**3 + '+str(self.coefficients[0])+' x**2 + '+str(self.coefficients[1])+'x + '+str(self.coefficients[2])
             self.field = field
+            except:
+                return "Sorry I don't support that yet"
         else:
             self.coefficients = [i%field.cardinality for i in coefficients]
             self.weierstrass = 'y**2 = x**3 + '+str(self.coefficients[0])+'x + '+str(self.coefficients[1])
@@ -76,7 +80,9 @@ class EllipticCurve():
 
 GF = GeneralField
 
+#This test is an elliptic curve over a general field of cardinality 7
 e = EllipticCurve(GF(7, 1), [1, 1])
+print(e)
 print(e.field.elements)
 rhss = [e.RHS(i) for i in e.field.elements]
 rootset = [e.field.square_root(j) for j in rhss]
@@ -85,4 +91,37 @@ print(points)
 print(e.points())
 print(e.pointset)
 
-#NUMBERS.py only supports prime fields at the moment; we need a generalized square root for prime powers
+#This test is an elliptic curve over a general field of cardinality 5
+print(5)
+e = EllipticCurve(GF(5, 1), [2, 2])
+print(e)
+print(e.field.elements)
+rhss = [e.RHS(i) for i in e.field.elements]
+rootset = [e.field.square_root(j) for j in rhss]
+points = [e.pointmaker(k) for k in rootset if k!=None]
+print(points)
+print(e.points())
+print(e.pointset)
+
+#This test is an elliptic curve overa  general field of cardinality 11 i.e. 3 mod 8
+print(11)
+e = EllipticCurve(GF(11, 1), [2, 2])
+print(e)
+print(e.field.elements)
+rhss = [e.RHS(i) for i in e.field.elements]
+rootset = [e.field.square_root(j) for j in rhss]
+points = [e.pointmaker(k) for k in rootset if k!=None]
+print(points)
+print(e.points())
+print(e.pointset)
+
+#This test is an elliptic curve over a general field of cardinality 17 i.e. 1 mod 8
+print(17)
+e = EllipticCurve(GF(17, 1) [3, 2])
+print(e)
+rhss = [e.RHS(i) for i in e.field.elements]
+rootset = [e.field.square_root(j) for j in rhss]
+points = [e.pointmaker(k) for k in rootset if k!=None]
+print(points)
+print(e.points())
+print(e.pointset)
