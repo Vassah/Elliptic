@@ -24,9 +24,14 @@ def Legendre(top, bottom):  #This is defined field independently since the Legen
 
 class GeneralField():
     def __init__(self, prime, power):
+        if power == 1:
+            self.isPrime = True
+        else:
+            self.isPrime = False
         self.elements = range(0, prime**power)
         self.characteristic = prime
         self.cardinality = len(self.elements)
+        return self
 
     def add(self, a, b):
         return Element(self, (a+b))
@@ -38,9 +43,9 @@ class GeneralField():
         return Element(self, (a-b))
 
     def is_square(self, number, is_prime = False):
-        if is_prime:
+        if self.isPrime:
             return self.exponent(number, (self.cardinality - 1) // 2, self.cardinality) == 1
-        if Legendre(number, field_size)==1:
+        elif Legendre(number, field_size)==1:
             return True
         return False
 
@@ -129,6 +134,32 @@ This shouldn't be hard using Hensel's Lemma
 
 
 #Tests:
+field_2 = GeneralField(2, 1)
+print(field_2.cardinality)
+print([i for i in field_2.elements])
+print(field_2.characteristic)
+print(field_2.add(3, 7))
+print(field_2.add(3, 7).data)
+print(field_2.sub(3, 7))
+print(field_2.sub(3, 7).data)
+print(field_2.of(77))
+a, b = field_2.of(77), field_2.of(89)
+print(a + b)
+print((a + b).data)
+
+field_3 = GeneralField(3, 1)
+print(field_3.cardinality)
+print([i for i in field_3.elements])
+print(field_3.characteristic)
+print(field_3.add(3, 7))
+print(field_3.add(3, 7).data)
+print(field_3.sub(3, 7))
+print(field_3.sub(3, 7).data)
+print(field_3.of(77))
+a, b = field_3.of(77), field_3.of(89)
+print(a + b)
+print((a + b).data)
+
 field_5 = GeneralField(5, 1)
 print(field_5.cardinality)
 print([i for i in field_5.elements])
@@ -139,5 +170,31 @@ print(field_5.sub(3, 7))
 print(field_5.sub(3, 7).data)
 print(field_5.of(77))
 a, b = field_5.of(77), field_5.of(89)
+print(a + b)
+print((a + b).data)
+
+field_7 = GeneralField(7, 1)
+print(field_7.cardinality)
+print([i for i in field_7.elements])
+print(field_7.characteristic)
+print(field_7.add(3, 9))
+print(field_7.add(3, 9).data)
+print(field_7.sub(3, 9))
+print(field_7.sub(3, 9).data)
+print(field_7.of(77))
+a, b = field_7.of(77), field_7.of(89)
+print(a + b)
+print((a + b).data)
+
+field_17 = GeneralField(17, 1)
+print(field_17.cardinality)
+print([i for i in field_17.elements])
+print(field_17.characteristic)
+print(field_17.add(15, 7))
+print(field_17.add(15, 7).data)
+print(field_17.sub(3, 7))
+print(field_17.sub(3, 7).data)
+print(field_17.of(77))
+a, b = field_17.of(77), field_17.of(89)
 print(a + b)
 print((a + b).data)
