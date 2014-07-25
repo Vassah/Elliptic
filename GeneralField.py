@@ -31,7 +31,6 @@ class GeneralField():
         self.elements = range(0, prime**power)
         self.characteristic = prime
         self.cardinality = len(self.elements)
-        return self
 
     def add(self, a, b):
         return Element(self, (a+b))
