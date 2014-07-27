@@ -11,22 +11,23 @@ class BadField(Exception):
 class EllipticCurve():
     def __init__(self, field, coefficients): #we will require a tuple of coefficients
         self.coefficients = []
-        try:
-            if field.cardinality%2==0:
-                if len(coefficients)<5:
-                    raise BadField(field.cardinality)
-                for i,val in enumerate(coefficients):
-                    self.coefficients[i] = val
-                    self.field = field
-            if field.cardinality%3==0:
-                if len(coefficients)!=3:
-                    raise BadField(field.cardinality)
-                for i,val in enumerate(coefficients):
-                    self.coefficients[i] = val
-                    self.weierstrass = 'y**2 = 4x**3 + '+str(self.coefficients[0])+' x**2 + '+str(self.coefficients[1])+'x + '+str(self.coefficients[2])
-                    self.field = field
-        except BadField as err:
-            return "Sorry I don't support that yet"
+        if field.cardinality%2==0:
+            if len(coefficients)<5:
+                raise BadField(field.cardinality)
+            for i,val in enumerate(coefficients):
+                self.coefficients[i] = val
+            self.field = field
+            except BadField as err:
+                return "Sorry I don't support "+str(err)+" yet"
+        if field.cardinality%3==0:
+            if len(coefficients)!=3:
+                raise BadField(field.cardinality)
+            for i,val in enumerate(coefficients):
+                self.coefficients[i] = val
+            self.weierstrass = 'y**2 = 4x**3 + '+str(self.coefficients[0])+' x**2 + '+str(self.coefficients[1])+'x + '+str(self.coefficients[2])
+            self.field = field
+            except BadField as err:
+                return "Sorry I don't support that yet"
         else:
             self.coefficients = [i%field.cardinality for i in coefficients]
             self.weierstrass = 'y**2 = x**3 + '+str(self.coefficients[0])+'x + '+str(self.coefficients[1])
