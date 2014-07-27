@@ -25,20 +25,21 @@ class EllipticCurve():
                     self.coefficients[i] = val
                     self.weierstrass = 'y**2 = 4x**3 + '+str(self.coefficients[0])+' x**2 + '+str(self.coefficients[1])+'x + '+str(self.coefficients[2])
                     self.field = field
+            else:
+                self.coefficients = [i%field.cardinality for i in coefficients]
+                self.weierstrass = 'y**2 = x**3 + '+str(self.coefficients[0])+'x + '+str(self.coefficients[1])
+                self.discriminant = -16*(4*self.coefficients[0]**3 + 27*self.coefficients[1]**2)
+                if self.discriminant != 0:
+                    self.j = -1728*((4*(self.coefficients[0]**3))//self.discriminant)
+                    self.singular = False
+                else:
+                    self.j = None
+                    self.singular = True
+                self.field = field
+                self.pointset = self.points()
+
         except BadField as err:
             return "Sorry I don't support that yet"
-        else:
-            self.coefficients = [i%field.cardinality for i in coefficients]
-            self.weierstrass = 'y**2 = x**3 + '+str(self.coefficients[0])+'x + '+str(self.coefficients[1])
-            self.discriminant = -16*(4*self.coefficients[0]**3 + 27*self.coefficients[1]**2)
-            if self.discriminant != 0:
-                self.j = -1728*((4*(self.coefficients[0]**3))//self.discriminant)
-                self.singular = False
-            else:
-                self.j = None
-                self.singular = True
-            self.field = field
-            self.pointset = self.points()
 
     def __str__(self):
         return 'Elliptic Curve given by '+self.weierstrass+' over '+str(self.field)
