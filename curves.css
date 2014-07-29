@@ -1,0 +1,9 @@
+svg .x-axis  line{
+  stroke: grey;
+  shape-rendering: crispEdges;
+  }
+  
+svg .y-axis line{
+  stroke: grey;
+  shape-rendering: crispEdges;
+  }
