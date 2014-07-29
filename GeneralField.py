@@ -32,14 +32,17 @@ class GeneralField():
         self.characteristic = prime
         self.cardinality = len(self.elements)
 
+    def of(self, number):
+        return Element(self, number)
+
     def add(self, a, b):
-        return Element(self, (a+b))
+        return self.of(a+b)
 
     def mult(self, a, b):
-        return Element(self, (a*b))
+        return self.of(a*b)
         
     def sub(self, a, b):
-        return Element(self, (a-b))
+        return self.of(a-b)
 
     def is_square(self, number, is_prime = False):
         if self.isPrime:
@@ -67,7 +70,7 @@ class GeneralField():
         for j,val in enumerate(powers): #Here we just multiply through the values
             if j in exponents:
                 r = (r*val)%self.cardinality
-        return Element(self, r%self.cardinality) #one last call to modulus to guarantee, then return
+        return self.of(r%self.cardinality) #one last call to modulus to guarantee, then return
 
     def square_root(self, number):
         if not self.is_square(number):
@@ -76,19 +79,16 @@ class GeneralField():
             return number,number,number
         elif self.cardinality%4 == 3:
             r = self.exponent(2 * number, (self.cardinality - 5)//4)
-            return Element(self, number),Element(self, r),Element(self, field_size-r)
+            return self.of(number),self.of(r),self.of(field_size-r)
         elif self.cardinality % 8 == 5:
             v = self.exponent(2 * number, (self.cardinality - 5)//8)
             i = (2 * number * v * v) % self.cardinality
             r = (number*v*(i - 1)) % self.cardinality
-            return Element(self, number),Element(self, r),Element(self, self.cardinality-r)
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
         elif self.cardinality % 8 == 1:
             r = self.shanks(number) #this needs replacing since having a separate shanks method sucks
-            return Element(self, number),Element(self, r),Element(self, self.cardinality-r)
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
         return None
-
-    def of(self, number):
-        return Element(self, number)
 
 class Element():
     def __init__(self, field, data):
@@ -114,13 +114,13 @@ class Element():
     
     __radd__ = __add__
 
-    def __exp__(self, other):
+    def __pow__(self, other):
         if other is Integer:
             return self.field.exponent(self.data, other)
         elif other.data == self.field.characteristic:
             return Element(self.field, 1)
         else:
-            return self.field.exponent(self, other)
+            return self.field.exponent(self.data, other.data)
 
     def square_root(self):
         return self.field.square_root(self.data)
