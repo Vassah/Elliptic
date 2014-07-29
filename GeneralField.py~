@@ -31,7 +31,6 @@ class GeneralField():
         self.elements = range(0, prime**power)
         self.characteristic = prime
         self.cardinality = len(self.elements)
-        return self
 
     def add(self, a, b):
         return Element(self, (a+b))
@@ -44,8 +43,8 @@ class GeneralField():
 
     def is_square(self, number, is_prime = False):
         if self.isPrime:
-            return self.exponent(number, (self.cardinality - 1) // 2, self.cardinality) == 1
-        elif Legendre(number, field_size)==1:
+            return self.exponent(number, (self.cardinality - 1) // 2) == 1
+        elif Legendre(number, self.cardinality)==1:
             return True
         return False
 
@@ -63,11 +62,11 @@ class GeneralField():
         exponents = [i for i in range(0, len(binexp)) if int(binexp[i])==1] #make an array of when the power is 1
         powers = [number] #Here we make the powers for the square and multiply algorithm
         for i in range(1, max(exponents)+1):
-            powers.append((powers[i-1]**2)%field_size)
+            powers.append((powers[i-1]**2)%self.cardinality)
         r = 1
         for j,val in enumerate(powers): #Here we just multiply through the values
             if j in exponents:
-                r = (r*val)%field_size
+                r = (r*val)%self.cardinality
         return Element(self, r%self.cardinality) #one last call to modulus to guarantee, then return
 
     def square_root(self, number):

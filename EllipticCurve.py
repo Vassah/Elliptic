@@ -53,7 +53,7 @@ class EllipticCurve():
     def points(self):
         rhss = [[i, self.RHS(i)] for i in self.field.elements]
         roots = [[j[0], self.field.square_root(j[1])] for j in rhss]
-        points = [point for point in self.pointmaker([j[0], j[1][1], j[1][2]]) for j in roots if j[1]!=None]
+        points = [[point for point in self.pointmaker([j[0], j[1][1], j[1][2]])] for j in roots if j[1]!=None]
         #The pervious line is two list comprehensions, makes points for each squareroot, the second flattens the returned tuple
         points.append([0,0,0])
         return points
@@ -123,10 +123,13 @@ print(e.pointset)
 
 #This test is an elliptic curve over a general field of cardinality 17 i.e. 1 mod 8
 print(17)
-e = EllipticCurve(GF(17, 1) [3, 2])
+e = EllipticCurve(GF(17, 1), [3, 2])
 print(e)
+print(e.field.elements)
 rhss = [e.RHS(i) for i in e.field.elements]
+print(rhss)
 rootset = [e.field.square_root(j) for j in rhss]
+print(rootset)
 points = [e.pointmaker(k) for k in rootset if k!=None]
 print(points)
 print(e.points())
