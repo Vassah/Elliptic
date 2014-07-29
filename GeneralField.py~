@@ -197,3 +197,5 @@ print(field_17.of(77))
 a, b = field_17.of(77), field_17.of(89)
 print(a + b)
 print((a + b).data)
+
+print((a+b).square_root())

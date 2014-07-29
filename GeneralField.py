@@ -114,14 +114,16 @@ class Element():
     
     __radd__ = __add__
 
-    def exp(self, other):
-        if other == self.field.characteristic:
+    def __exp__(self, other):
+        if other is Integer:
+            return self.field.exponent(self.data, other)
+        elif other.data == self.field.characteristic:
             return Element(self.field, 1)
         else:
             return self.field.exponent(self, other)
 
     def square_root(self):
-        return self.field.square_root(self)
+        return self.field.square_root(self.data)
 
 #Implement also a __lt__, __gt__, and etc
 
