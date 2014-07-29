@@ -1,9 +1,21 @@
-svg .x-axis  line{
+svg .xaxis  line{
+  fill: none;
   stroke: grey;
   shape-rendering: crispEdges;
   }
   
-svg .y-axis line{
+svg .yaxis line{
+  fill: none;
   stroke: grey;
   shape-rendering: crispEdges;
   }
+
+svg .yaxis text {
+  color: grey;
+  font-family: sans-serif;
+}
+
+svg .xaxis text {
+  color: grey;
+  font-family: sans-serif;
+}
