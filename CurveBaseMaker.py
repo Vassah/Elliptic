@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-#Begin here
->>>>>>> Simpler-Fix
 import psycopg2
 import EllipticCurve as ec
 
@@ -16,8 +12,3 @@ with psycopg2.connect(database_info) as connecticus:
           for k in range(0,i):
             curvacious = ec.EllipticCurve(GFi, [j, k])
             pointses = curvacious.pointset
-<<<<<<< HEAD
-=======
-
-          
->>>>>>> Simpler-Fix
