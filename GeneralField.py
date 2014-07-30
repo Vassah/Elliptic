@@ -121,17 +121,3 @@ This shouldn't be hard using Hensel's Lemma
 '''
 
 
-#Tests:
-field_17 = GeneralField(17, 1)
-print(field_17.cardinality)
-print("\n\nis_square Test")
-for i in range(0, 17):
-    print(field_17.is_square(i))
-
-print("\n\nShanks Test")
-for i in range(0, 17):
-    print(field_17.shanks(i))
-
-print("\n\nSquare Root Test")
-for i in range(0, 17):
-    print(field_17.square_root(i))
