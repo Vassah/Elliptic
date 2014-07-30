@@ -33,7 +33,7 @@ class GeneralField():
         self.cardinality = len(self.elements)
 
     def of(self, number):
-        return number % self.field.cardinality
+        return number % self.cardinality
 
 
     def add(self, a, b):
@@ -72,6 +72,27 @@ class GeneralField():
             if j in exponents:
                 r = self.of(r*val)
         return self.of(r) #one last call to modulus to guarantee, then return
+    
+    def shanks(self, number):
+        d = 2
+        while self.is_square(d):
+            d += 1
+        t = self.cardinality - 1
+        s = 0
+        while t % 2 ==0:
+            t //= 2
+            s += t
+        at = pow(number, t, self.cardinality)
+        dt = pow(d, t, self.cardinality)
+        m = 0
+        for i in range(0, 2):
+            if pow(at * pow(dt, m), pow(2, s-1-i), self.cardinality) == (self.cardinality - 1):
+                m = m + pow(2, i)
+        r = (pow(number, (t + 1) // 2) * pow(dt, m // 2)) % self.cardinality
+        return r
+
+    def cipolla(self, number):
+        return None
 
     def square_root(self, number):
         if not self.is_square(number):
@@ -80,7 +101,7 @@ class GeneralField():
             return number,number,number
         elif self.cardinality%4 == 3:
             r = self.exponent(2 * number, (self.cardinality - 5)//4)
-            return self.of(number),self.of(r),self.of(field_size-r)
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
         elif self.cardinality % 8 == 5:
             v = self.exponent(2 * number, (self.cardinality - 5)//8)
             i = (2 * number * v * v) % self.cardinality

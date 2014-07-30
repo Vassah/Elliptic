@@ -32,14 +32,18 @@ class GeneralField():
         self.characteristic = prime
         self.cardinality = len(self.elements)
 
+    def of(self, number):
+        return number % self.cardinality
+
+
     def add(self, a, b):
-        return Element(self, (a+b))
+        return self.of(a + b)
 
     def mult(self, a, b):
-        return Element(self, (a*b))
+        return self.of( a * b)
         
     def sub(self, a, b):
-        return Element(self, (a-b))
+        return self.of(a - b)
 
     def is_square(self, number, is_prime = False):
         if self.isPrime:
@@ -62,12 +66,12 @@ class GeneralField():
         exponents = [i for i in range(0, len(binexp)) if int(binexp[i])==1] #make an array of when the power is 1
         powers = [number] #Here we make the powers for the square and multiply algorithm
         for i in range(1, max(exponents)+1):
-            powers.append((powers[i-1]**2)%self.cardinality)
+            powers.append(self.of(powers[i-1]**2))
         r = 1
         for j,val in enumerate(powers): #Here we just multiply through the values
             if j in exponents:
-                r = (r*val)%self.cardinality
-        return Element(self, r%self.cardinality) #one last call to modulus to guarantee, then return
+                r = self.of(r*val)
+        return self.of(r) #one last call to modulus to guarantee, then return
 
     def square_root(self, number):
         if not self.is_square(number):
@@ -76,54 +80,16 @@ class GeneralField():
             return number,number,number
         elif self.cardinality%4 == 3:
             r = self.exponent(2 * number, (self.cardinality - 5)//4)
-            return Element(self, number),Element(self, r),Element(self, field_size-r)
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
         elif self.cardinality % 8 == 5:
             v = self.exponent(2 * number, (self.cardinality - 5)//8)
             i = (2 * number * v * v) % self.cardinality
             r = (number*v*(i - 1)) % self.cardinality
-            return Element(self, number),Element(self, r),Element(self, self.cardinality-r)
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
         elif self.cardinality % 8 == 1:
             r = self.shanks(number) #this needs replacing since having a separate shanks method sucks
-            return Element(self, number),Element(self, r),Element(self, self.cardinality-r)
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
         return None
-
-    def of(self, number):
-        return Element(self, number)
-
-class Element():
-    def __init__(self, field, data):
-        self.data = data%field.cardinality
-        self.field = field
-
-    def __add__(self, other):
-        if self.field == other.field:
-            return self.field.add(self.data, other.data)
-        return None
-
-    def __sub__(self, other):
-        if self.field == other.field:
-            return self.field.sub(self.data, other.data)
-        return None
-
-    def __mult__(self, other):
-        if self.field == other.field:
-            return self.field.mult(self.data, other.data)
-        return None
-        
-    __rmult__ = __mult__
-    
-    __radd__ = __add__
-
-    def exp(self, other):
-        if other == self.field.characteristic:
-            return Element(self.field, 1)
-        else:
-            return self.field.exponent(self, other)
-
-    def square_root(self):
-        return self.field.square_root(self)
-
-#Implement also a __lt__, __gt__, and etc
 
 '''
 #The following method can be severely generalized by passing it a method as its final argument, this being the polynomial relation to be raised to the higher power of the prime. As written, we require that there be implemented an element class which the arithmetic is operating on
@@ -133,69 +99,3 @@ This shouldn't be hard using Hensel's Lemma
 
 
 #Tests:
-field_2 = GeneralField(2, 1)
-print(field_2.cardinality)
-print([i for i in field_2.elements])
-print(field_2.characteristic)
-print(field_2.add(3, 7))
-print(field_2.add(3, 7).data)
-print(field_2.sub(3, 7))
-print(field_2.sub(3, 7).data)
-print(field_2.of(77))
-a, b = field_2.of(77), field_2.of(89)
-print(a + b)
-print((a + b).data)
-
-field_3 = GeneralField(3, 1)
-print(field_3.cardinality)
-print([i for i in field_3.elements])
-print(field_3.characteristic)
-print(field_3.add(3, 7))
-print(field_3.add(3, 7).data)
-print(field_3.sub(3, 7))
-print(field_3.sub(3, 7).data)
-print(field_3.of(77))
-a, b = field_3.of(77), field_3.of(89)
-print(a + b)
-print((a + b).data)
-
-field_5 = GeneralField(5, 1)
-print(field_5.cardinality)
-print([i for i in field_5.elements])
-print(field_5.characteristic)
-print(field_5.add(3, 7))
-print(field_5.add(3, 7).data)
-print(field_5.sub(3, 7))
-print(field_5.sub(3, 7).data)
-print(field_5.of(77))
-a, b = field_5.of(77), field_5.of(89)
-print(a + b)
-print((a + b).data)
-
-field_7 = GeneralField(7, 1)
-print(field_7.cardinality)
-print([i for i in field_7.elements])
-print(field_7.characteristic)
-print(field_7.add(3, 9))
-print(field_7.add(3, 9).data)
-print(field_7.sub(3, 9))
-print(field_7.sub(3, 9).data)
-print(field_7.of(77))
-a, b = field_7.of(77), field_7.of(89)
-print(a + b)
-print((a + b).data)
-
-field_17 = GeneralField(17, 1)
-print(field_17.cardinality)
-print([i for i in field_17.elements])
-print(field_17.characteristic)
-print(field_17.add(15, 7))
-print(field_17.add(15, 7).data)
-print(field_17.sub(3, 7))
-print(field_17.sub(3, 7).data)
-print(field_17.of(77))
-a, b = field_17.of(77), field_17.of(89)
-print(a + b)
-print((a + b).data)
-
-print((a+b).square_root())
