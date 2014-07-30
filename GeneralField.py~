@@ -72,6 +72,27 @@ class GeneralField():
             if j in exponents:
                 r = self.of(r*val)
         return self.of(r) #one last call to modulus to guarantee, then return
+    
+    def shanks(self, number):
+        d = 2
+        while self.is_square(d):
+            d += 1
+        t = self.cardinality - 1
+        s = 0
+        while t % 2 ==0:
+            t //= 2
+            s += t
+        at = pow(number, t, self.cardinality)
+        dt = pow(d, t, self.cardinality)
+        m = 0
+        for i in range(0, 2):
+            if pow(at * pow(dt, m), pow(2, s-1-i), self.cardinality) == (self.cardinality - 1):
+                m = m + pow(2, i)
+        r = (pow(number, (t + 1) // 2) * pow(dt, m // 2)) % self.cardinality
+        return r
+
+    def cipolla(self, number):
+        return None
 
     def square_root(self, number):
         if not self.is_square(number):
@@ -99,3 +120,16 @@ This shouldn't be hard using Hensel's Lemma
 
 
 #Tests:
+field_17 = GeneralField(17, 1)
+print(field_17.cardinality)
+print("\n\nis_square Test")
+for i in range(0, 17):
+    print(field_17.is_square(i))
+
+print("\n\nShanks Test")
+for i in range(0, 17):
+    print(field_17.shanks(i))
+
+print("\n\nSquare Root Test")
+for i in range(0, 17):
+    print(Element(field_17, i).square_root())
