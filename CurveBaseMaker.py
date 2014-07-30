@@ -13,6 +13,7 @@ with psycopg2.connect(database_info) as connecticus:
             curvacious = ec.EllipticCurve(GFi, [j, k])
             pointses = curvacious.pointset
             curtesy.execute("ALTER TABLE field" + i + " ADD " + ec.coefficients + " string")
-            curtesy.execute("")
-            
+            curtesy.execute("CREATE TABLE " + ec.coefficients + "coefficients PRIMARY KEY")
+            for point in curvacious.pointset:
+              curtesy.execute("INSERT INTO (x, y, z)" + ec.coefficients + " VALUES " + "("+point[0]+" "+point[1]+" "+point[2]+")"
 #WE NEED TO THINK ABOUT DATABASE DESIGN
