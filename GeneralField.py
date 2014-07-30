@@ -126,7 +126,7 @@ class Element():
         return self.field.square_root(self.data)
         
     def __str__(self):
-        return self.data + " mod " + self.field.cardinality
+        return str(self.data) + " mod " + str(self.field.cardinality)
 #Implement also a __lt__, __gt__, and etc
 
 '''
