@@ -1,4 +1,4 @@
-def Legendre(top, bottom):  #This is defined field independently since the Legendre symbol is a morphism really.
+def Legendre(top, bottom, is_prime=false):  #This is defined field independently since the Legendre symbol is a morphism really.
     top = top%bottom
     if top==1 or top ==0:
         return 1
@@ -23,7 +23,7 @@ def Legendre(top, bottom):  #This is defined field independently since the Legen
 #there appears to be a case missing however. Sometimes we get a null outpout
 
 class GeneralField():
-    def __init__(self, prime, power):
+    def __init__(self, prime, power = 1):
         if power == 1:
             self.isPrime = True
         else:
@@ -47,9 +47,10 @@ class GeneralField():
     def is_square(self, number, is_prime = False):
         if self.isPrime:
             return self.exponent(number, (self.cardinality - 1) // 2) == 1
-        elif Legendre(number, self.cardinality)==1:
+        elif Legendre(number, self.cardinality) == 1:
             return True
-        return False
+        else:
+            return False
 
     def exponent(self, number, exponent):
         if exponent == 0:
@@ -72,12 +73,31 @@ class GeneralField():
                 r = (r*val)%self.cardinality
         return self.of(r%self.cardinality) #one last call to modulus to guarantee, then return
 
+    def shanks(self,number):
+        d= 2
+        while self.is_square(d, self.cardinality):
+            d += 1
+        t = self.cardinality - 1
+        s = 0
+        while t % 2 == 0:
+            t //= 2
+            s += 1
+        at = pow(number, t, self.cardinality)
+        dt = pow(d, t, self.cardinality)
+        m = 0
+        for i in range(0, s):
+            if pow(at * pow(dt, m), pow(2, s-1-i), self.cardinality) == (self.cardinality - 1):
+                m = m + pow(2, i)
+        r = (pow(number, (t + 1) // 2) * pow(dt, m // 2) % self.cardinality)
+        return r
+
     def square_root(self, number):
+        number = number % self.cardinality
         if not self.is_square(number):
             return None
         if self.cardinality == 2:
             return number,number,number
-        elif self.cardinality%4 == 3:
+        elif self.cardinality % 4 == 3:
             r = self.exponent(2 * number, (self.cardinality - 5)//4)
             return self.of(number),self.of(r),self.of(field_size-r)
         elif self.cardinality % 8 == 5:
@@ -88,7 +108,6 @@ class GeneralField():
         elif self.cardinality % 8 == 1:
             r = self.shanks(number) #this needs replacing since having a separate shanks method sucks
             return self.of(number),self.of(r),self.of(self.cardinality-r)
-        return None
 
 class Element():
     def __init__(self, field, data):
@@ -126,7 +145,7 @@ class Element():
         return self.field.square_root(self.data)
         
     def __str__(self):
-        return self.data + " mod " + self.field.cardinality
+        return str(self.data) + " mod " + str(self.field.cardinality)
 #Implement also a __lt__, __gt__, and etc
 
 '''
@@ -202,4 +221,14 @@ a, b = field_17.of(77), field_17.of(89)
 print(a + b)
 print((a + b).data)
 
-print((a+b).square_root())
+print("\n\nis_square Test")
+for i in range(0, 17):
+    print(field_17.is_square(i))
+
+print("\n\nShanks Test")
+for i in range(0, 17):
+    print(field_17.shanks(i))
+
+print("\n\nSquare Root Test")
+for i in range(0, 17):
+    print(Element(field_17, i).square_root())
