@@ -107,7 +107,7 @@ class GeneralField():
             return self.of(number),self.of(r),self.of(self.cardinality-r)
         elif self.cardinality % 8 == 1:
             r = self.shanks(number) #this needs replacing since having a separate shanks method sucks
-            return self.of(number),self.of(r),self.of(self.cardinality-r)
+            return (number % self.cardinality),(r % self.cardinality),(self.cardinality-r)
 
 class Element():
     def __init__(self, field, data):
@@ -231,4 +231,4 @@ for i in range(0, 17):
 
 print("\n\nSquare Root Test")
 for i in range(0, 17):
-    print(Element(field_17, i).square_root())
+    print(field_17.square_root(i))
