@@ -33,6 +33,7 @@ class GeneralField():
         self.cardinality = len(self.elements)
 
     def of(self, number):
+<<<<<<< HEAD
         return Element(self, number)
 
     def add(self, a, b):
@@ -43,6 +44,19 @@ class GeneralField():
         
     def sub(self, a, b):
         return self.of(a-b)
+=======
+        return number % self.cardinality
+
+
+    def add(self, a, b):
+        return self.of(a + b)
+
+    def mult(self, a, b):
+        return self.of( a * b)
+        
+    def sub(self, a, b):
+        return self.of(a - b)
+>>>>>>> Simpler-Fix
 
     def is_square(self, number, is_prime = False):
         if self.isPrime:
@@ -66,10 +80,11 @@ class GeneralField():
         exponents = [i for i in range(0, len(binexp)) if int(binexp[i])==1] #make an array of when the power is 1
         powers = [number] #Here we make the powers for the square and multiply algorithm
         for i in range(1, max(exponents)+1):
-            powers.append((powers[i-1]**2)%self.cardinality)
+            powers.append(self.of(powers[i-1]**2))
         r = 1
         for j,val in enumerate(powers): #Here we just multiply through the values
             if j in exponents:
+<<<<<<< HEAD
                 r = (r*val)%self.cardinality
         return self.of(r%self.cardinality) #one last call to modulus to guarantee, then return
 
@@ -90,6 +105,31 @@ class GeneralField():
                 m = m + pow(2, i)
         r = (pow(number, (t + 1) // 2) * pow(dt, m // 2) % self.cardinality)
         return r
+=======
+                r = self.of(r*val)
+        return self.of(r) #one last call to modulus to guarantee, then return
+    
+    def shanks(self, number):
+        d = 2
+        while self.is_square(d):
+            d += 1
+        t = self.cardinality - 1
+        s = 0
+        while t % 2 ==0:
+            t //= 2
+            s += t
+        at = pow(number, t, self.cardinality)
+        dt = pow(d, t, self.cardinality)
+        m = 0
+        for i in range(0, 2):
+            if pow(at * pow(dt, m), pow(2, s-1-i), self.cardinality) == (self.cardinality - 1):
+                m = m + pow(2, i)
+        r = (pow(number, (t + 1) // 2) * pow(dt, m // 2)) % self.cardinality
+        return r
+
+    def cipolla(self, number):
+        return None
+>>>>>>> Simpler-Fix
 
     def square_root(self, number):
         number = number % self.cardinality
@@ -99,7 +139,11 @@ class GeneralField():
             return number,number,number
         elif self.cardinality % 4 == 3:
             r = self.exponent(2 * number, (self.cardinality - 5)//4)
+<<<<<<< HEAD
             return self.of(number),self.of(r),self.of(field_size-r)
+=======
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
+>>>>>>> Simpler-Fix
         elif self.cardinality % 8 == 5:
             v = self.exponent(2 * number, (self.cardinality - 5)//8)
             i = (2 * number * v * v) % self.cardinality
@@ -107,6 +151,7 @@ class GeneralField():
             return self.of(number),self.of(r),self.of(self.cardinality-r)
         elif self.cardinality % 8 == 1:
             r = self.shanks(number) #this needs replacing since having a separate shanks method sucks
+<<<<<<< HEAD
             return (number % self.cardinality),(r % self.cardinality),(self.cardinality-r)
 
 class Element():
@@ -148,6 +193,11 @@ class Element():
         return str(self.data) + " mod " + str(self.field.cardinality)
 #Implement also a __lt__, __gt__, and etc
 
+=======
+            return self.of(number),self.of(r),self.of(self.cardinality-r)
+        return None
+
+>>>>>>> Simpler-Fix
 '''
 #The following method can be severely generalized by passing it a method as its final argument, this being the polynomial relation to be raised to the higher power of the prime. As written, we require that there be implemented an element class which the arithmetic is operating on
 The idea is to take things that are defined mod p**n and raise them mod p**n+1
@@ -156,71 +206,17 @@ This shouldn't be hard using Hensel's Lemma
 
 
 #Tests:
-field_2 = GeneralField(2, 1)
-print(field_2.cardinality)
-print([i for i in field_2.elements])
-print(field_2.characteristic)
-print(field_2.add(3, 7))
-print(field_2.add(3, 7).data)
-print(field_2.sub(3, 7))
-print(field_2.sub(3, 7).data)
-print(field_2.of(77))
-a, b = field_2.of(77), field_2.of(89)
-print(a + b)
-print((a + b).data)
-
-field_3 = GeneralField(3, 1)
-print(field_3.cardinality)
-print([i for i in field_3.elements])
-print(field_3.characteristic)
-print(field_3.add(3, 7))
-print(field_3.add(3, 7).data)
-print(field_3.sub(3, 7))
-print(field_3.sub(3, 7).data)
-print(field_3.of(77))
-a, b = field_3.of(77), field_3.of(89)
-print(a + b)
-print((a + b).data)
-
-field_5 = GeneralField(5, 1)
-print(field_5.cardinality)
-print([i for i in field_5.elements])
-print(field_5.characteristic)
-print(field_5.add(3, 7))
-print(field_5.add(3, 7).data)
-print(field_5.sub(3, 7))
-print(field_5.sub(3, 7).data)
-print(field_5.of(77))
-a, b = field_5.of(77), field_5.of(89)
-print(a + b)
-print((a + b).data)
-
-field_7 = GeneralField(7, 1)
-print(field_7.cardinality)
-print([i for i in field_7.elements])
-print(field_7.characteristic)
-print(field_7.add(3, 9))
-print(field_7.add(3, 9).data)
-print(field_7.sub(3, 9))
-print(field_7.sub(3, 9).data)
-print(field_7.of(77))
-a, b = field_7.of(77), field_7.of(89)
-print(a + b)
-print((a + b).data)
-
 field_17 = GeneralField(17, 1)
 print(field_17.cardinality)
-print([i for i in field_17.elements])
-print(field_17.characteristic)
-print(field_17.add(15, 7))
-print(field_17.add(15, 7).data)
-print(field_17.sub(3, 7))
-print(field_17.sub(3, 7).data)
-print(field_17.of(77))
-a, b = field_17.of(77), field_17.of(89)
-print(a + b)
-print((a + b).data)
+print("\n\nis_square Test")
+for i in range(0, 17):
+    print(field_17.is_square(i))
 
+print("\n\nShanks Test")
+for i in range(0, 17):
+    print(field_17.shanks(i))
+
+<<<<<<< HEAD
 print("\n\nis_square Test")
 for i in range(0, 17):
     print(field_17.is_square(i))
@@ -232,3 +228,8 @@ for i in range(0, 17):
 print("\n\nSquare Root Test")
 for i in range(0, 17):
     print(field_17.square_root(i))
+=======
+print("\n\nSquare Root Test")
+for i in range(0, 17):
+    print(Element(field_17, i).square_root())
+>>>>>>> Simpler-Fix
