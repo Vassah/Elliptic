@@ -39,7 +39,8 @@ class EllipticCurve():
                 self.pointset = self.points()
 
         except BadField as err:
-            return "Sorry I don't support that yet"
+            print("Sorry I don't support that yet.")
+            return None
 
     def __str__(self):
         return 'Elliptic Curve given by '+self.weierstrass+' over '+str(self.field)
